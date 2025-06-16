@@ -78,6 +78,11 @@ export default function RoomPage() {
     });
   };
 
+  const handleSeek = (offset: number) => {
+    const newTime = Math.max(0, roomState.currentTime + offset);
+    sendSyncMessage("seek", newTime);
+  };
+
   const generateInjectionScript = () => {
     return `
 (function() {
@@ -229,13 +234,13 @@ export default function RoomPage() {
       <div className="container mx-auto px-4 py-8">
         <div className="max-w-4xl mx-auto">
           <div className="text-center mb-8">
-            <h1 className="text-4xl font-bold mb-4">🎬 Watch Party Room</h1>
+            <h1 className=" bg-gradient-to-r from-blue-400 to-white bg-clip-text text-transparent text-4xl font-bold mb-4">Watch Party Room</h1>
             <div className="bg-white/10 backdrop-blur-sm rounded-lg p-4 inline-block">
-              <div className="text-2xl font-mono font-bold text-yellow-300">
+              <div className="text-2xl font-mono font-bold text-blue-300">
                 Room ID: {roomId}
               </div>
               <div className="text-sm opacity-75 mt-1">
-                Share this ID with your friends to sync playback
+                Share this ID to sync playback
               </div>
             </div>
           </div>
@@ -243,7 +248,7 @@ export default function RoomPage() {
           <div className="grid md:grid-cols-2 gap-8">
             {/* Connection Status */}
             <div className="bg-white/10 backdrop-blur-sm rounded-lg p-6">
-              <h2 className="text-xl font-bold mb-4">📡 Connection Status</h2>
+              <h2 className="text-xl font-bold mb-4">Connection Status</h2>
               <div className="space-y-3">
                 <div className="flex items-center justify-between">
                   <span>Connection:</span>
@@ -272,9 +277,21 @@ export default function RoomPage() {
 
             {/* Manual Controls */}
             <div className="bg-white/10 backdrop-blur-sm rounded-lg p-6">
-              <h2 className="text-xl font-bold mb-4">🎮 Manual Controls</h2>
+              <h2 className="text-xl font-bold mb-4">Manual Controls</h2>
               <div className="space-y-4">
-                <div className="flex gap-3">
+                <div className="grid grid-cols-2 gap-3">
+                  <button
+                    onClick={() => handleSeek(-5)}
+                    className="flex-1 bg-gray-600 hover:bg-gray-700 px-4 py-2 rounded-lg font-semibold transition-colors"
+                  >
+                    -5s
+                  </button>
+                  <button
+                    onClick={() => handleSeek(5)}
+                    className="flex-1 bg-gray-600 hover:bg-gray-700 px-4 py-2 rounded-lg font-semibold transition-colors"
+                  >
+                    +5s
+                  </button>
                   <button
                     onClick={() => sendSyncMessage("play")}
                     className="flex-1 bg-green-600 hover:bg-green-700 px-4 py-2 rounded-lg font-semibold transition-colors"
@@ -288,7 +305,7 @@ export default function RoomPage() {
                     ⏸️ Pause
                   </button>
                 </div>
-                <div className="text-sm opacity-75">
+                <div className="text-sm opacity-75 text-center">
                   Current Time: {roomState.currentTime.toFixed(1)}s
                 </div>
               </div>
@@ -297,7 +314,7 @@ export default function RoomPage() {
 
           {/* Injection Instructions */}
           <div className="mt-8 bg-white/10 backdrop-blur-sm rounded-lg p-6">
-            <h2 className="text-xl font-bold mb-4">🔧 Setup Instructions</h2>
+            <h2 className="text-xl font-bold mb-4">Setup Instructions</h2>
 
             <div className="space-y-6">
               <div>
@@ -312,7 +329,7 @@ export default function RoomPage() {
                   onClick={copyScript}
                   className="bg-blue-600 hover:bg-blue-700 px-4 py-2 rounded-lg font-semibold transition-colors"
                 >
-                  📋 Copy Script to Clipboard
+                  Copy Script to Clipboard
                 </button>
               </div>
 
@@ -334,17 +351,17 @@ export default function RoomPage() {
                     );
                   }}
                 >
-                  🔖 Sync Party Bookmarklet
+                  Sync Party Bookmarklet
                 </a>
               </div>
             </div>
 
             <div className="mt-6 p-4 bg-yellow-500/20 rounded-lg">
               <div className="text-sm">
-                <strong>💡 How it works:</strong>
+                <strong>How it works:</strong>
                 <ol className="mt-2 space-y-1 list-decimal list-inside">
                   <li>
-                    Open your video streaming site (Peacock, Netflix, etc.)
+                    Open YouTube
                   </li>
                   <li>
                     Use one of the methods above to inject the sync script
